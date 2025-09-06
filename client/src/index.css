@@ -3,10 +3,16 @@
 
 @import "tailwindcss";
 
+
+@custom-variant dark (&:where(.dark, .dark *));
+
 *{
     font-family: "Outfit", sans-serif;
 }
 
-::-webkit-scrollbar{
+@theme {
+    --color-primary: #e6ccff;
+}
+::-webkit-scrollbar {
     display: none;
 }

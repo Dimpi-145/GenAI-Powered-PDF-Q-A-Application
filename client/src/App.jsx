@@ -1,19 +1,19 @@
 import React from 'react'
 import { Route, Routes } from 'react-router-dom'
-import HomePage from './Pages/HomePage'
-import LoginPage from './Pages/LoginPage'
-import ProfilePage from './Pages/ProfilePage'
-import RegistrationPage from './Pages/RegistrationPage'
+import Sidebar from './Components/Sidebar'
+import ChatBox from './Components/ChatBox'
 
 const App = () => {
   return (
-    <div className='bg-gradient-to-b from-teal-50 to-orange-50'>
+    <div className='dark:bg-gradient-to-b from-[#242124] to-[#000000]
+    dark:text-white'>
+    <div className= 'flex h-screen w-screen'>
+      <Sidebar/>
       <Routes>
-        <Route path='/' element={<HomePage />}/>
-        <Route path='/login' element={<LoginPage />}/>
-        <Route path='/profile' element={<ProfilePage/>}/>
-        <Route path='/registration' element={<RegistrationPage/>}/>
+        <Route path='/' element={<ChatBox />}/>
+        
       </Routes>
+    </div>
     </div>
   )
 }

@@ -1,11 +1,11 @@
 import React from 'react'
 
-const HomePage = () => {
+const ChatBox = () => {
   return (
     <div>
-      HomePage
+      ChatBox
     </div>
   )
 }
 
-export default HomePage
+export default ChatBox

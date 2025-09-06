@@ -1,28 +1,16 @@
-import React from 'react'
-import {useNavigate} from 'react-router-dom';
+import React, { useState } from 'react'
+import { useAppcontext } from '../context/AppContext'
 
-const Sidebar = ({selectedUser, setSelectedUser}) => {
-  const navigate= useNavigate();
+const Sidebar = () => {
+
+    const {chats, setSelectedChat, theme, setTheme, user}= useAppcontext()
+    const [search, setSearch]= useState('')
+
   return (
-    <div className={`bg-{#8185B2}/10 h-full p-5 rounded-r-xl overflow-y-scroll text-white ${selectedUser ? "max-md:hidden" : ''}`}>
-      <div className='pb-5'>
-        <div classname= 'flex justify-between items-center'>
-          <img src={assets.logo} alt="logo" classsName='max-w-40'/>
-          <div classname="relative py-2 group">
-            <img src={assets.menu_icon} alt="Menu" classsName='max-h-5 cursor-pointer'/>
-            <div classname= 'absolute top-full right-0 z-20 w-32 p-5 rounded-md bg-[#282142] border border-gray-600
-             text-gray-100 hidden group-hover:block'>
-              <p onClick={()=>navigate('/profile')} classname='cursor-pointer text-sm'>Edit Profile</p>
-              <hr className="my-2 border-t border-gray-500" />
-              <p classname='cursor-pointer text-sm'>Logout</p>
-            </div>
-          </div>
-
-          
-
-        </div>
-      </div>
-     
+    <div className='flex-col h-screen min-w-72 p-5 dark:bg-gradient-to-b from-[#242124]/30 to-[#00000]/30 border-r border-[#80609F]/30 backdrop-blur-3xl
+    transition-all duration-500 max-md:absolute left-0 z-1'>
+      <img src={theme === 'dark' ? assets.logo_full : assets.logo_full_dark}
+       alt="" className='w-full max-w-48'/>
     </div>
   )
 }
