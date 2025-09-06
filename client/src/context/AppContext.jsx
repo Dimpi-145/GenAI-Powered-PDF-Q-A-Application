@@ -1,4 +1,4 @@
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 
@@ -22,7 +22,7 @@ export const AppContextProvider = ({children})=>{
         setselectedChats(dummyChats[0])
     }
 
-    UseEffect(()=>{
+    useEffect(()=>{
         if(theme === 'dark'){
             document.documentElement.classList.add('dark');
         }else{
