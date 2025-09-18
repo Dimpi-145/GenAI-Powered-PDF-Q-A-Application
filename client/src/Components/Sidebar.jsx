@@ -69,6 +69,7 @@ const Sidebar = () => {
             ))
         }
         </div>
+        {/* dark mode toggle */}
         <div className='flex items-center justify-between gap-2 p-3 mt-4 border border-gray-300 dark:border-white/15 
         rounded-md '>
           <div className='flex items-center gap-2 text-sm'>
@@ -83,6 +84,10 @@ const Sidebar = () => {
             peer-checked:translate-x-4'></span>
           </label>
         </div>
+
+        {/* user Account */}
+        <div className='flex items-center gap-2 p-3 mt-4 border border-gray-300 dark:border-white/15 rounded-md 
+        cursor-pointer hover:scale-103 transition-all '></div>
     </div>
    
   )
