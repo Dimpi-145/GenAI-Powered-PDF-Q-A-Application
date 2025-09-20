@@ -27,9 +27,11 @@ import ai_image9 from "./ai_image9.jpg";
 import ai_image10 from "./ai_image10.jpg";
 import ai_image11 from "./ai_image11.jpg";
 import ai_image12 from "./ai_image12.jpg";
+import attachment_icon from "./attachment_icon.png";
 
 export const assets = {
     logo,
+    attachment_icon,
     logo_full,
     logo_large,
     search_icon,
