@@ -24,7 +24,10 @@ const Sidebar = ({isMenuOpen, setIsMenuOpen}) => {
 
   return (
     <div
-      className={`flex flex-col h-screen min-w-72 p-1 dark:bg-gradient-to-b from-[#242124]/30 to-[#00000]/30 border-r border-[#80609F]/30 backdrop-blur-3xl transition-all duration-500 max-md:absolute left-0 z-1 ${isMenuOpen ? '' : 'hidden md:block'}`}
+      className={`flex flex-col h-screen min-w-72 p-1 dark:bg-gradient-to-b from-[#242124]/30 to-[#00000]/30 border-r border-[#80609F]/30 backdrop-blur-3xl transition-all duration-500
+        max-md:fixed max-md:top-0 max-md:left-0 max-md:w-full max-md:h-full max-md:z-50
+        ${theme === 'dark' ? 'max-md:bg-[#242124]/95' : 'max-md:bg-white'}
+        ${isMenuOpen ? '' : 'hidden md:block'}`}
     >
       <div className="flex-1 flex flex-col">
         <img 
@@ -56,7 +59,7 @@ const Sidebar = ({isMenuOpen, setIsMenuOpen}) => {
         <div>
          {
             chats.filter((chat)=> chat.messages[0]? chat.messages[0]?.content.toLowerCase().includes(search.toLowerCase()): 
-            chat.name.toLowerCase().includes(search.toLowerCase())).map((chat, idx)=>(
+            chat.name.toLowerCase().includes(search.toLowerCase())).map((chat)=>(
               <div 
                 key={chat._id || idx} 
                 className='p-2 px-3 dark:bg-[#57317C]/10 border border-gray-300 dark:border-[#80609F]/15 rounded-md cursor-pointer flex justify-between group mb-4'
@@ -96,7 +99,7 @@ const Sidebar = ({isMenuOpen, setIsMenuOpen}) => {
         {/* user Account */}
         <div className='flex items-center gap-3 p-3 border border-gray-300 dark:border-white/15 rounded-md cursor-pointer group'>
           <img src={assets.user_icon} className='w-7 rounded-full' alt=""/>
-          <p className='flex-1 text-sm dark:text-primary truncate'>{user ? user.name.replace(/greatstack/gi, 'User').trim() : 'Login your account'}</p>
+          <p className='flex-1 text-sm dark:text-primary truncate'>{user && user.name ? user.name.replace(/greatstack/gi, 'User').trim() : 'Login your account'}</p>
           {user && <img src={assets.logout_icon} className='h-10 cursor-pointer hidden not-dark:invert group-hover:block'/>}
         </div>
       </div>

@@ -1,10 +1,11 @@
 import React, { useState } from 'react'
-import { Route, Routes } from 'react-router-dom'
+import { Route, Routes, Navigate } from 'react-router-dom'
 import Sidebar from './Components/Sidebar'
 import ChatBox from './Components/ChatBox'
 import { assets } from './assets/assets'
 import { useAppcontext } from './context/AppContext'
 import LoginPage from './Pages/LoginPage'
+import HomePage from './Pages/HomePage' 
 
 const App = () => {
   const { user } = useAppcontext()
@@ -20,20 +21,12 @@ const App = () => {
           alt="Open menu"
         />
       )}
-      {user ? (
-        <div className='dark:bg-gradient-to-b from-[#242124] to-[#000000] dark:text-white'>
-          <div className='flex h-screen w-screen'>
-            <Sidebar isMenuOpen={isMenuOpen} setIsMenuOpen={setIsMenuOpen} />
-            <Routes>
-              <Route path='/' element={<ChatBox />} />
-            </Routes>
-          </div>
-        </div>
-      ) : (
-        <div className='bg-gradient-to-b from-[#242124] to-[#000000] flex items-center justify-center h-screen w-screen'>
-          <LoginPage />
-        </div>
-      )}
+      <Routes>
+        <Route path="/login" element={<LoginPage />} />
+  <Route path="/home" element={user ? <HomePage /> : <Navigate to="/login" />} />
+  <Route path="/HomePage" element={user ? <HomePage /> : <Navigate to="/login" />} />
+        <Route path="/" element={<Navigate to={user ? "/home" : "/login"} />} />
+      </Routes>
     </>
   )
 }
