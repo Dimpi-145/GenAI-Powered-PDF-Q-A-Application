@@ -5,7 +5,7 @@ import moment from 'moment'
 
 const Sidebar = ({isMenuOpen, setIsMenuOpen}) => {
 
-  const {chats, setChats, selectedchats, setselectedChats, theme, setTheme, user, setUser, navigate} = useAppcontext()
+  const {chats, setChats, selectedChat, setSelectedChat, theme, setTheme, user, setUser, navigate} = useAppcontext()
     const [search, setSearch]= useState('')
 
     // const formatDate = (dateString) => {
@@ -61,7 +61,7 @@ const Sidebar = ({isMenuOpen, setIsMenuOpen}) => {
                 key={chat._id || idx} 
                 className='p-2 px-3 dark:bg-[#57317C]/10 border border-gray-300 dark:border-[#80609F]/15 rounded-md cursor-pointer flex justify-between group mb-4'
                 onClick={() => {
-                  setselectedChats(chat);
+                  setSelectedChat(chat);
                   if (typeof setIsMenuOpen === 'function') setIsMenuOpen(false);
                   if (typeof navigate === 'function') navigate('/');
                 }}
