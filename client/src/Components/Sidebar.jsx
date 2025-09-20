@@ -3,28 +3,30 @@ import { useAppcontext } from '../context/AppContext'
 import { assets } from '../assets/assets'
 import moment from 'moment'
 
-const Sidebar = () => {
+const Sidebar = ({isMenuOpen, setIsMenuOpen}) => {
 
-  const {chats, setSelectedChat, theme, setTheme, user}= useAppcontext()
+  const {chats, setChats, selectedchats, setselectedChats, theme, setTheme, user, setUser, navigate} = useAppcontext()
     const [search, setSearch]= useState('')
 
-    const formatDate = (dateString) => {
-      if (!dateString) return '';
-      const date = new Date(dateString);
-      if (isNaN(date.getTime())) return '';
-      return date.toLocaleString('en-US', {
-        year: 'numeric',
-        month: 'short',
-        day: 'numeric',
-        hour: '2-digit',
-        minute: '2-digit',
-        hour12: true
-      });
-    };
+    // const formatDate = (dateString) => {
+    //   if (!dateString) return '';
+    //   const date = new Date(dateString);
+    //   if (isNaN(date.getTime())) return '';
+    //   return date.toLocaleString('en-US', {
+    //     year: 'numeric',
+    //     month: 'short',
+    //     day: 'numeric',
+    //     hour: '2-digit',
+    //     minute: '2-digit',
+    //     hour12: true
+    //   });
+    // };
 
   return (
-    <div className='flex-col h-screen min-w-72 p-1 dark:bg-gradient-to-b from-[#242124]/30 to-[#00000]/30 border-r border-[#80609F]/30 backdrop-blur-3xl
-    transition-all duration-500 max-md:absolute left-0 z-1'>
+    <div
+      className={`flex flex-col h-screen min-w-72 p-1 dark:bg-gradient-to-b from-[#242124]/30 to-[#00000]/30 border-r border-[#80609F]/30 backdrop-blur-3xl transition-all duration-500 max-md:absolute left-0 z-1 ${isMenuOpen ? '' : 'hidden md:block'}`}
+    >
+      <div className="flex-1 flex flex-col">
         <img 
           src={theme === 'dark' ? assets.logo_large : assets.logo_large}
           alt="Logo" 
@@ -38,8 +40,8 @@ const Sidebar = () => {
           <span className='mr-2 text-xl'>+</span> New Chat
         </button>
 
-        <div className='relative flex items-center p-3 mt-4 border border-gray-400 dark:border-white/20 rounded-md bg-white dark:bg-[#242124]/30'>
-          <span className='absolute left-4'>
+        <div className='relative flex items-center p-3 mt-3 border border-gray-400 dark:border-white/20 rounded-md bg-white dark:bg-[#242124]/30'>
+          <span className='absolute left-2'>
             <img src={assets.search_icon} className='w-5 h-5 dark:invert' alt="Search" />
           </span>
           <input
@@ -50,12 +52,20 @@ const Sidebar = () => {
             className='pl-10 pr-2 py-2 w-full text-base placeholder:text-gray-400 outline-none bg-transparent'
           />
         </div>
-            {chats.length >0 && <p className='mt-8 text-xl font-bold'>Recent Chats</p>}
+        {chats.length >0 && <p className='mt-8 text-xl font-bold'>Recent Chats</p>}
         <div>
          {
             chats.filter((chat)=> chat.messages[0]? chat.messages[0]?.content.toLowerCase().includes(search.toLowerCase()): 
             chat.name.toLowerCase().includes(search.toLowerCase())).map((chat, idx)=>(
-              <div key={chat._id || idx} className='p-2 px-3 dark:bg-[#57317C]/10 border border-gray-300 dark:border-[#80609F]/15 rounded-md cursor-pointer flex justify-between group mb-4'>
+              <div 
+                key={chat._id || idx} 
+                className='p-2 px-3 dark:bg-[#57317C]/10 border border-gray-300 dark:border-[#80609F]/15 rounded-md cursor-pointer flex justify-between group mb-4'
+                onClick={() => {
+                  setselectedChats(chat);
+                  if (typeof setIsMenuOpen === 'function') setIsMenuOpen(false);
+                  if (typeof navigate === 'function') navigate('/');
+                }}
+              >
                 <div>
                   <p className='truncate w-full'>
                     {chat.messages.length > 0 ? chat.messages[0].content.slice(0,32) : chat.name}
@@ -69,27 +79,29 @@ const Sidebar = () => {
             ))
         }
         </div>
+      </div>
+  <div className="flex flex-col gap-2 pb-4 mt-90">
         {/* dark mode toggle */}
-        <div className='flex items-center justify-between gap-2 p-3 mt-4 border border-gray-300 dark:border-white/15 
-        rounded-md '>
+        <div className='flex items-center justify-between gap-2 p-3 border border-gray-300 dark:border-white/15 rounded-md'>
           <div className='flex items-center gap-2 text-sm'>
             <img src={assets.theme_icon} className='w-4 dark:invert' alt=""/>
             <p>dark Mode</p>
           </div>
           <label className='relative inline-flex cursor-pointer'>
             <input onChange={()=> setTheme(theme === 'dark' ? 'light' : 'dark')} type="checkbox" className="sr-only peer" checked={theme === 'dark'}/>
-            <div className='w-9 h-5 bg-gray-400 rounded-full peer-checked:bg-purple-600 transition-all'>
-            </div>
-            <span className='absolute left-1 top-1 w-3 h-3 bg-white rounded-full transition-transform
-            peer-checked:translate-x-4'></span>
+            <div className='w-9 h-5 bg-gray-400 rounded-full peer-checked:bg-purple-600 transition-all'></div>
+            <span className='absolute left-1 top-1 w-3 h-3 bg-white rounded-full transition-transform peer-checked:translate-x-4'></span>
           </label>
         </div>
-
         {/* user Account */}
-        <div className='flex items-center gap-2 p-3 mt-4 border border-gray-300 dark:border-white/15 rounded-md 
-        cursor-pointer hover:scale-103 transition-all '></div>
+        <div className='flex items-center gap-3 p-3 border border-gray-300 dark:border-white/15 rounded-md cursor-pointer group'>
+          <img src={assets.user_icon} className='w-7 rounded-full' alt=""/>
+          <p className='flex-1 text-sm dark:text-primary truncate'>{user ? user.name.replace(/greatstack/gi, 'User').trim() : 'Login your account'}</p>
+          {user && <img src={assets.logout_icon} className='h-10 cursor-pointer hidden not-dark:invert group-hover:block'/>}
+        </div>
+      </div>
+      <img onClick={()=> setIsMenuOpen(false)}src={assets.close_icon} className='absolute top-3 right-3 w-5 h-5 cursor-pointer md-hidden not-dark:invert' alt=""/>
     </div>
-   
   )
 }
 
