@@ -28,9 +28,11 @@ import ai_image10 from "./ai_image10.jpg";
 import ai_image11 from "./ai_image11.jpg";
 import ai_image12 from "./ai_image12.jpg";
 import attachment_icon from "./attachment_icon.png";
+import google_logo from "./google_logo.png";
 
 export const assets = {
     logo,
+    google_logo,
     attachment_icon,
     logo_full,
     logo_large,

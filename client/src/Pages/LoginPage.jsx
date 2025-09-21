@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import { useAppcontext } from '../context/AppContext';
 import { useNavigate } from 'react-router-dom';
-import googleLogo from '../assets/google_logo.png';
+import { assets } from '../assets/assets';
 
 const LoginPage = () => {
     const [state, setState] = useState("login");
@@ -26,7 +26,7 @@ const LoginPage = () => {
                     <h1 className="text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 via-pink-500 to-purple-600 mb-2 text-center drop-shadow-lg">Welcome!</h1>
                     <p className="text-lg text-gray-600 mb-4 text-center">Sign in to your account or create a new one below.</p>
                     <button type="button" className="flex items-center gap-3 w-full justify-center py-3 px-6 rounded-lg border-2 border-gray-300 bg-white hover:bg-gray-100 transition-all shadow-md mb-2 font-semibold text-gray-700 text-base">
-                        <img src={googleLogo} alt="Google" className="w-6 h-6" />
+                        <img src={assets.google_logo} alt="Google" className="w-6 h-6" />
                         Sign up with Google
                     </button>
                     <div className="w-full flex items-center gap-2 my-2">
