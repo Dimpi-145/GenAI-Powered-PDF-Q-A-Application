@@ -7,6 +7,7 @@ import { useAppcontext } from './context/AppContext'
 import LoginPage from './Pages/LoginPage'
 import HomePage from './Pages/HomePage' 
 
+
 const App = () => {
   const { user } = useAppcontext()
   const [isMenuOpen, setIsMenuOpen] = useState(false)
