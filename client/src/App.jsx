@@ -14,7 +14,14 @@ const App = () => {
 
   return (
     <>
-      {!isMenuOpen && (
+      <Routes>
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/home" element={user ? <HomePage /> : <Navigate to="/login" />} />
+        <Route path="/HomePage" element={user ? <HomePage /> : <Navigate to="/login" />} />
+        <Route path="/" element={<Navigate to={user ? "/home" : "/login"} />} />
+      </Routes>
+      {/* Only show menu icon on home page, not on login/signup */}
+      {window.location.pathname.startsWith('/home') && !isMenuOpen && (
         <img
           src={assets.menu_icon}
           className='absolute top-3 left-3 w-8 h-8 cursor-pointer md:hidden not-dark:invert'
@@ -22,12 +29,6 @@ const App = () => {
           alt="Open menu"
         />
       )}
-      <Routes>
-        <Route path="/login" element={<LoginPage />} />
-  <Route path="/home" element={user ? <HomePage /> : <Navigate to="/login" />} />
-  <Route path="/HomePage" element={user ? <HomePage /> : <Navigate to="/login" />} />
-        <Route path="/" element={<Navigate to={user ? "/home" : "/login"} />} />
-      </Routes>
     </>
   )
 }
