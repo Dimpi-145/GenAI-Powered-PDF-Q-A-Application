@@ -15,7 +15,6 @@ const LoginPage = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        // Fake login: set a dummy user object
         setUser({ name: name || 'Demo User', email });
         navigate('/home');
     }
