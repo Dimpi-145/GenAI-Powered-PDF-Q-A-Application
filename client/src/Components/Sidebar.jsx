@@ -8,20 +8,6 @@ const Sidebar = ({isMenuOpen, setIsMenuOpen}) => {
   const {chats, setChats, selectedChat, setSelectedChat, theme, setTheme, user, setUser, navigate} = useAppcontext()
     const [search, setSearch]= useState('')
 
-    // const formatDate = (dateString) => {
-    //   if (!dateString) return '';
-    //   const date = new Date(dateString);
-    //   if (isNaN(date.getTime())) return '';
-    //   return date.toLocaleString('en-US', {
-    //     year: 'numeric',
-    //     month: 'short',
-    //     day: 'numeric',
-    //     hour: '2-digit',
-    //     minute: '2-digit',
-    //     hour12: true
-    //   });
-    // };
-
   return (
     <div
       className={`flex flex-col h-screen min-w-72 p-1 dark:bg-gradient-to-b from-[#242124]/30 to-[#00000]/30 border-r border-[#80609F]/30 backdrop-blur-3xl transition-all duration-500
