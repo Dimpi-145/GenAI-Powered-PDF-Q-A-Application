@@ -5,7 +5,7 @@ import Message from './Message'
 
 const ChatBox = () => {
 
-  const {selectedChat, theme} = useAppcontext()
+  const {selectedChat, theme, chats, setChats} = useAppcontext()
 
   const [messages, setMessages] = useState([])
   const [loading, setLoading] = useState(false)
@@ -23,6 +23,38 @@ const ChatBox = () => {
   useEffect(() => {
     if (selectedChat) {
       setMessages(selectedChat.messages);
+    } else {
+      // Project-specific dummy conversation (plain-text PDF scenario)
+      const pdfText = `Title: Quarterly Report 2025\n\nExecutive Summary:\nThis document presents the Q2 financial results for Acme Corp. Revenue grew 8% compared to Q1. Net income improved due to cost savings in operations. Key highlights include expansion into two new markets and a successful pilot of the AI-driven recommendation engine.\n\nRevenue Analysis:\nTotal revenue: $5,400,000. Product A: $2,800,000. Product B: $1,900,000. Services: $700,000.\n\nExpenses:\nOperating expenses decreased by 5% year-over-year. Marketing spend remained flat. R&D investment increased by 12% to support product roadmap.\n\nConclusion:\nThe company is on track for annual targets with continued investment in AI capabilities.`
+
+      const sampleConversation = [
+        { role: 'user', content: 'I uploaded a PDF: "Quarterly Report 2025" (plain text). Please summarize the executive summary for me.', timestamp: Date.now() - 60000 },
+        { role: 'assistant', content: 'Summary: The Q2 financial results show an 8% revenue growth vs Q1. Net income improved due to operational cost savings. Company expanded into two new markets and piloted an AI recommendation engine. R&D investment increased to support roadmap.', timestamp: Date.now() - 45000 },
+        { role: 'user', content: 'What was the total revenue and breakdown by product?', timestamp: Date.now() - 30000 },
+        { role: 'assistant', content: 'Total revenue: $5,400,000. Breakdown: Product A — $2,800,000; Product B — $1,900,000; Services — $700,000.', timestamp: Date.now() - 15000 },
+        { role: 'user', content: 'Were there any notable changes in expenses?', timestamp: Date.now() - 8000 },
+        { role: 'assistant', content: 'Operating expenses decreased by 5% YoY. Marketing spend remained flat while R&D increased by 12% to support product development.', timestamp: Date.now() - 2000 },
+        // Optionally include the extracted plain text as a system/assistant message for reference
+        { role: 'assistant', content: `Extracted text from uploaded PDF:\n\n${pdfText}`, timestamp: Date.now() }
+      ];
+
+      setMessages(sampleConversation);
+
+      // Add this sample conversation to global chats (search history) if not already present
+      const demoChatId = 'demo-pdf-1'
+      const chatObj = {
+        _id: demoChatId,
+        userId: 'demo-user',
+        userName: 'Demo User',
+        name: 'Quarterly Report 2025',
+        messages: sampleConversation,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+      }
+
+      if (!chats || !chats.some(c => c._id === demoChatId)) {
+        setChats(prev => [chatObj, ...(prev || [])])
+      }
     }
   }, [selectedChat])
 
@@ -30,7 +62,7 @@ const ChatBox = () => {
     <div className='flex-1 flex flex-col justify-between m-5 md:m-10 xl:mx-30 max-md:mt-14 2xl:pr-40'>
       {/* chatMesssages */}
       <div className='flex-1 mb-5 overflow-y-scroll'>
-        {(!selectedChat || messages.length === 0) && (
+        {(messages.length === 0) && (
           <div className='flex flex-col items-center gap-0 text-primary mt-12'>
             <img src={theme === 'dark' ? assets.logo_large : assets.logo_large}
               alt="Logo" className='block mx-auto w-auto max-w-80 sm:max-w-96 align-top' style={{marginBottom: 0, paddingBottom: 0}} />
