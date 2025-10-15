@@ -58,8 +58,7 @@ const ChatBox = () => {
             required
           />
         </div>
-        {/* Attachment Icon and Dropdown (single instance) */}
-        {/* Only one attachment menu, controlled by the icon inside the input */}
+       
         {showAttachMenu && (
           <div className="absolute left-0 bottom-16 bg-white dark:bg-[#242124] border border-gray-300 dark:border-[#80609F]/30 rounded shadow-lg z-10 min-w-[160px]">
             <label className="block px-4 py-2 cursor-pointer hover:bg-gray-100 dark:hover:bg-[#57317C]/20">
