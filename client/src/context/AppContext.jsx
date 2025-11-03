@@ -7,17 +7,14 @@ const AppContext = createContext()
 
 export const AppContextProvider = ({ children }) => {
 
-    const navigate = useNavigate()
+    const navigate =useNavigate()
     const [user, setUser] = useState(null);
-    // Initialize chats with dummyChats so recent chats show immediately
-    const [chats, setChats] = useState(dummyChats || []);
-    // Do not auto-select any chat on load — show 'New Chat' by default after login
+    const [chats, setChats] = useState([]);
     const [selectedChat, setSelectedChat] = useState(null);
     const [theme, setTheme] = useState(localStorage.getItem('theme') || 'light');
     
     const fetchUser = async () =>{
-        // No-op for now; keep user null unless explicitly set by login
-        // If you want a demo user automatically, call setUser({ name: 'Demo User', email: 'demo@example.com' }) here.
+        setUser(dummyPdfChats)
     }
 
     const createNewChat = () => {
@@ -48,21 +45,25 @@ export const AppContextProvider = ({ children }) => {
         localStorage.setItem('theme', theme)
     }, [theme])
 
-    // Ensure dummy chats are present on mount but do NOT auto-select them
-    useEffect(() => {
-        if ((!chats || chats.length === 0) && dummyChats && dummyChats.length > 0) {
-            setChats(dummyChats)
+    useEffect(()=>{
+        if(user){
+            // Load dummy chats first
+            setChats(dummyChats);
+            // Then create and select a new chat
+            const newChat = {
+                _id: Date.now().toString(),
+                name: 'New Chat',
+                messages: [],
+                createdAt: new Date(),
+                updatedAt: new Date()
+            };
+            setChats(prevChats => [newChat, ...prevChats]);
+            setSelectedChat(newChat);
+        }else{
+            setChats([])
+            setSelectedChat(null)
         }
-    }, [])
-
-    useEffect(() => {
-        // If a user logs in, you could load user-specific chats from a server here.
-        // For now we keep the dummy chats visible for all users (including anonymous visitors).
-        if (user) {
-            // Optionally: merge server/user chats with dummyChats
-            // Example: setChats(prev => [...dummyChats, ...prev])
-        }
-    }, [user])
+    },[user])
 
     
 

@@ -33,7 +33,7 @@ const Sidebar = ({isMenuOpen, setIsMenuOpen}) => {
         
       </div>
 
-      {/* Recent chats */}
+      {/* Recent chats
       {chats.length > 0 && <p className='mt-4 text-sm'>Recent chats</p>}
       <div className='flex-1 overflow-y-scroll mt-3 text-sm space-y-3'>
         {
@@ -54,10 +54,10 @@ const Sidebar = ({isMenuOpen, setIsMenuOpen}) => {
 
           ))
         }
-      </div>
+      </div> */}
 
       {/* Dark Mode Toggle */}
-        <div className='flex items-center justify-between gap-2 p-3 mt-4 border border-gray-300 dark:border-white/15 rounded-md'> 
+        <div className='flex items-center justify-between gap-2 p-3 mt-90 border border-gray-300 dark:border-white/15 rounded-md'> 
         <div className='flex items-center gap-2 text-sm'>
           <img src={assets.theme_icon} className='w-4 dark:invert' alt=""/>
           <p>Dark Mode</p>

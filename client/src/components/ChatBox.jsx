@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useRef } from 'react'
 import { useAppContext } from '../context/AppContext'
 import { assets } from '../assets/assets'
 import Messages from './Messages'
@@ -6,7 +6,7 @@ import Messages from './Messages'
 const ChatBox = () => {
 
 
-  const {selectedChat, theme} = useAppContext()
+  const {selectedChat, theme, setSelectedChat, setChats, createNewChat} = useAppContext()
 
   const [messages, setMessages] = useState([])
 
@@ -17,9 +17,91 @@ const ChatBox = () => {
   const [mode, setMode] = useState('text')
   const [selectedFile, setSelectedFile] = useState(null)
   const [isPublished, setIsPublished] = useState(false)
+  const messagesEndRef = useRef(null)
 
   const onSubmit = async (e) => {
     e.preventDefault()
+
+    // ensure we have a chat to append to
+    let currentChat = selectedChat
+    if (!currentChat) {
+      // create a new chat and use it
+      currentChat = createNewChat ? createNewChat() : {
+        _id: Date.now().toString(),
+        name: 'New Chat',
+        messages: [],
+        createdAt: new Date(),
+        updatedAt: new Date()
+      }
+    }
+
+    if (mode === 'file' && selectedFile) {
+      const message = {
+        role: 'user',
+        content: selectedFile.name,
+        file: selectedFile,
+        isImage: false,
+        isPublished: false,
+        timestamp: Date.now()
+      }
+      setMessages(prev => [...prev, message])
+
+      const updated = { ...currentChat, messages: [...(currentChat.messages || []), message], updatedAt: new Date() }
+      setSelectedChat(updated)
+      setChats(prev => prev.map(c => c._id === updated._id ? updated : c))
+
+      // reset file state
+      setSelectedFile(null)
+      setMode('text')
+        // simulate assistant reply for file
+        setTimeout(() => {
+          const assistantMsg = {
+            role: 'assistant',
+            content: `Received file: ${message.content}`,
+            isImage: false,
+            isPublished: false,
+            timestamp: Date.now()
+          }
+          setMessages(prev => [...prev, assistantMsg])
+          const updated2 = { ...updated, messages: [...(updated.messages || []), assistantMsg], updatedAt: new Date() }
+          setSelectedChat(updated2)
+          setChats(prev => prev.map(c => c._id === updated2._id ? updated2 : c))
+        }, 700)
+        return
+    }
+
+    const text = prompt.trim()
+    if (!text) return
+
+    const message = {
+      role: 'user',
+      content: text,
+      isImage: false,
+      isPublished: false,
+      timestamp: Date.now()
+    }
+
+    setMessages(prev => [...prev, message])
+
+    const updated = { ...currentChat, messages: [...(currentChat.messages || []), message], updatedAt: new Date() }
+    setSelectedChat(updated)
+    setChats(prev => prev.map(c => c._id === updated._id ? updated : c))
+
+    setPrompt('')
+    // simulate assistant reply
+    setTimeout(() => {
+      const assistantMsg = {
+        role: 'assistant',
+        content: `I received: ${text}`,
+        isImage: false,
+        isPublished: false,
+        timestamp: Date.now()
+      }
+      setMessages(prev => [...prev, assistantMsg])
+      const updated2 = { ...updated, messages: [...(updated.messages || []), assistantMsg], updatedAt: new Date() }
+      setSelectedChat(updated2)
+      setChats(prev => prev.map(c => c._id === updated2._id ? updated2 : c))
+    }, 700)
   }
 
 
@@ -28,6 +110,13 @@ const ChatBox = () => {
       setMessages(selectedChat.messages)
     }
   }, [selectedChat])
+
+  // scroll to bottom when messages change
+  useEffect(() => {
+    if (messagesEndRef.current) {
+      messagesEndRef.current.scrollIntoView({ behavior: 'smooth' })
+    }
+  }, [messages])
 
 
   return (
@@ -43,7 +132,8 @@ const ChatBox = () => {
         )}
 
 
-        {messages.map((message, index)=> <Messages key={index} message={message} />)}
+  {messages.map((message, index)=> <Messages key={index} message={message} />)}
+  <div ref={messagesEndRef} />
 
       </div>
 

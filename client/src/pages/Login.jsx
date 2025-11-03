@@ -10,13 +10,18 @@ const Login = () => {
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-    const { setUser, theme, setTheme } = useAppContext();
+    const { setUser, theme, setTheme, createNewChat } = useAppContext();
     const navigate = useNavigate();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         setUser({ name: name || 'Demo User', email });
-        navigate('/');
+        // Create and select a fresh New Chat so the home landing shows the new chat
+        if (typeof createNewChat === 'function') {
+            createNewChat();
+        } else {
+            navigate('/');
+        }
     }
 
     return (
