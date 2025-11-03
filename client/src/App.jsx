@@ -1,36 +1,78 @@
-import React, { useState } from 'react'
-import { Route, Routes, Navigate } from 'react-router-dom'
-import Sidebar from './Components/Sidebar'
-import ChatBox from './Components/ChatBox'
-import { assets } from './assets/assets'
-import { useAppcontext } from './context/AppContext'
-import LoginPage from './Pages/LoginPage'
-import HomePage from './Pages/HomePage' 
+import {  createContext, useContext, useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { dummyPdfChats, dummyChats } from "./assets/assets";
 
 
-const App = () => {
-  const { user } = useAppcontext()
-  const [isMenuOpen, setIsMenuOpen] = useState(false)
+const AppContext = createContext()
 
-  return (
-    <>
-      <Routes>
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/home" element={user ? <HomePage /> : <Navigate to="/login" />} />
-        <Route path="/HomePage" element={user ? <HomePage /> : <Navigate to="/login" />} />
-        <Route path="/" element={<Navigate to={user ? "/home" : "/login"} />} />
-      </Routes>
-      {/* Only show menu icon on home page, not on login/signup */}
-      {window.location.pathname.startsWith('/home') && !isMenuOpen && (
-        <img
-          src={assets.menu_icon}
-          className='absolute top-3 left-3 w-8 h-8 cursor-pointer md:hidden not-dark:invert'
-          onClick={() => setIsMenuOpen(true)}
-          alt="Open menu"
-        />
-      )}
-    </>
-  )
+export const AppContextProvider = ({ children }) => {
+
+    const navigate =useNavigate()
+    const [user, setUser] = useState(null);
+    const [chats, setChats] = useState([]);
+    const [selectedChat, setSelectedChat] = useState(null);
+    const [theme, setTheme] = useState(localStorage.getItem('theme') || 'light');
+    
+    const fetchUser = async () =>{
+        setUser()
+    }
+
+    const createNewChat = () => {
+        const newChat = {
+            _id: Date.now().toString(),
+            name: 'New Chat',
+            messages: [],
+            createdAt: new Date(),
+            updatedAt: new Date()
+        };
+        setChats(prevChats => [newChat, ...prevChats]);
+        setSelectedChat(newChat);
+        navigate('/');
+        return newChat;
+    };
+
+    const fetchUserChats = async () => {
+        setChats(dummyChats)
+        setSelectedChat(dummyChats[0])
+    }
+
+    useEffect(()=>{
+        if(theme === 'dark'){
+            document.documentElement.classList.add('dark')
+        }else{
+            document.documentElement.classList.remove('dark')
+        }
+        localStorage.setItem('theme', theme)
+    }, [theme])
+
+    useEffect(()=>{
+        if(user){
+            // call the correct function to load chats for the user
+            fetchUserChats()
+        }else{
+            setChats([])
+            setSelectedChat(null)
+        }
+    },[user])
+
+    
+
+    useEffect(()=>{
+        // populate initial user and chats on app start
+        fetchUser()
+        fetchUserChats()
+
+    },[])
+
+
+    const value={
+        navigate, user, setUser, fetchUser, chats, setChats, selectedChat, setSelectedChat, theme, setTheme, createNewChat
+    }
+    return (
+        <AppContext.Provider value={value}>
+            {children}
+        </AppContext.Provider>
+    )
 }
 
-export default App
+export const useAppContext =()=> useContext(AppContext)
