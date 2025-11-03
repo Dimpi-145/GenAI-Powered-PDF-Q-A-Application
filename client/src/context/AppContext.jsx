@@ -11,8 +11,8 @@ export const AppContextProvider = ({ children }) => {
     const [user, setUser] = useState(null);
     // Initialize chats with dummyChats so recent chats show immediately
     const [chats, setChats] = useState(dummyChats || []);
-    // Select first chat by default if available
-    const [selectedChat, setSelectedChat] = useState((dummyChats && dummyChats.length > 0) ? dummyChats[0] : null);
+    // Do not auto-select any chat on load — show 'New Chat' by default after login
+    const [selectedChat, setSelectedChat] = useState(null);
     const [theme, setTheme] = useState(localStorage.getItem('theme') || 'light');
     
     const fetchUser = async () =>{
@@ -48,13 +48,10 @@ export const AppContextProvider = ({ children }) => {
         localStorage.setItem('theme', theme)
     }, [theme])
 
-    // Ensure dummy chats are present on mount and select the first one if none selected
+    // Ensure dummy chats are present on mount but do NOT auto-select them
     useEffect(() => {
         if ((!chats || chats.length === 0) && dummyChats && dummyChats.length > 0) {
             setChats(dummyChats)
-        }
-        if (!selectedChat && dummyChats && dummyChats.length > 0) {
-            setSelectedChat(dummyChats[0])
         }
     }, [])
 

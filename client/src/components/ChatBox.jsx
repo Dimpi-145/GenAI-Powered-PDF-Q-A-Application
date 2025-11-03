@@ -15,6 +15,7 @@ const ChatBox = () => {
 
   const [prompt, setPrompt] = useState('')
   const [mode, setMode] = useState('text')
+  const [selectedFile, setSelectedFile] = useState(null)
   const [isPublished, setIsPublished] = useState(false)
 
   const onSubmit = async (e) => {
@@ -57,13 +58,13 @@ const ChatBox = () => {
               const file = e.target.files[0];
               if (file) {
                 setMode('file');
-                setPrompt(file.name);
+                setSelectedFile(file);
               }
             }}
           />
           <img src={assets.attachment_icon} alt="Attach file" className='w-6 h-6' />
         </label>
-        <input onChange={(e)=>setPrompt(e.target.value)} value={prompt} type="text" placeholder="Type your message here..." className='flex-1 w-full text-sm outline-none' required/>
+        <input onChange={(e)=>setPrompt(e.target.value)} value={prompt} type="text" placeholder="Type your message here..." className='flex-1 w-full text-sm outline-none' required={!selectedFile}/>
         <button disabled={loading}>
           <img src={loading ? assets.stop_icon : assets.send_icon} className='w-8 cursor-pointer' alt=""/>
         </button>
