@@ -1,33 +1,33 @@
 import React from 'react'
+import { Routes, Route, Navigate } from 'react-router-dom'
 import Home from './pages/Home'
-import { Route, Routes } from 'react-router-dom'
 import Login from './pages/Login'
 import './assets/prism.css'
 import { useAppContext } from './context/AppContext'
 
 const App = () => {
-
   const { user } = useAppContext()
 
-  
-
-
-
   return (
-
-    <>
-
     <Routes>
-      {/* Public home page shown at '/' */}
-      <Route path='/' element={<Home />} />
-      {/* Login page explicitly at /login */}
-      <Route path='/login' element={<Login />} />
+      {/* Protected Home route */}
+      <Route
+        path="/"
+        element={user ? <Home /> : <Navigate to="/login" replace />}
+      />
+
+      {/* Public Login route */}
+      <Route
+        path="/login"
+        element={!user ? <Login /> : <Navigate to="/" replace />}
+      />
+
+      {/* Catch-all fallback */}
+      <Route
+        path="*"
+        element={<Navigate to={user ? "/" : "/login"} replace />}
+      />
     </Routes>
-
-
-
-    
-    </>
   )
 }
 

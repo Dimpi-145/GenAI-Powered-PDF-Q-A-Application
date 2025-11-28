@@ -1,79 +1,95 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { useAppContext } from '../context/AppContext'
-import {assets} from '../assets/assets'
-import moment from  'moment'
+import { assets } from '../assets/assets'
 
-const Sidebar = ({isMenuOpen, setIsMenuOpen}) => {
+const Sidebar = ({ isMenuOpen, setIsMenuOpen }) => {
+  const { theme, setTheme, navigate, logout } = useAppContext()
 
-  const {chats, setSelectedChat, theme, setTheme, user, navigate, createNewChat} = useAppContext()
-  const [search, setSearch] = useState('')
+  // Get user info from localStorage
+  const userData = JSON.parse(localStorage.getItem('user')) || {}
+  const { name, email } = userData
 
-  const handleNewChat = () => {
-    createNewChat();
-    setIsMenuOpen(false);
-  }
+  // App Version
+  const APP_VERSION = "v1.0.0"
 
   return (
-    <div className={`flex flex-col h-screen min-w-72 p-5 dark:bg-gradient-to-b from-[#242124]/30 to-[#000000]/30 border-r border-[#80609F]/30 backdrop-blur-3xl transition-all duration-500 max-md:absolute left-0 z-1 ${!isMenuOpen && 'max-md:-translate-x-full'}`}>
-      {/* Logo */}
-      <img src={theme === 'dark'  ? assets.logo_large : assets.logo_large} alt="" className='w-full max-w-48'/>
+    <div
+      className={`fixed top-0 left-0 h-screen w-72 p-5 flex flex-col 
+      bg-[#d8f7f0] dark:bg-slate-800 text-black dark:text-white 
+      backdrop-blur-3xl transition-transform duration-500 z-20
+      ${isMenuOpen ? 'translate-x-0' : '-translate-x-full'}`}
+    >
+      {/* Close Button */}
+      <img
+        onClick={() => setIsMenuOpen(false)}
+        src={assets.close_icon}
+        className='absolute top-3 right-3 h-5 cursor-pointer dark:invert'
+        alt='close'
+      />
+
+      <div className="mt-8 flex items-end gap-2">
+        <h1 className="text-3xl text-slate-600 dark:text-white bg-clip-text dark:opacity-100">
+          PaperMind
+        </h1>
+        <span className="text-xs text-gray-600 dark:text-gray-300 mb-1">
+          {APP_VERSION}
+        </span>
+      </div>
+
+      {/* User Profile Section */}
+      <div className='flex items-center w-full py-3 px-3 mt-8 text-slate-700 dark:text-white bg-amber-100 dark:bg-gradient-to-r from-[#1E293B]/80 to-[#334155]/80 shadow-lg rounded-md border border-white/10'>
+        <img
+          src={assets.user_icon}
+          alt='User'
+          className='w-10 h-10 rounded-full border-2 border-white/20 mr-3'
+        />
+        <div className='flex flex-col'>
+          <p className='font-semibold text-sm leading-tight'>{name || 'Guest User'}</p>
+          <p className='text-xs  dark:text-gray-300 leading-tight'>{email || 'No Email'}</p>
+        </div>
+      </div>
 
       {/* New Chat Button */}
-      <button 
-        onClick={handleNewChat}
-        className='flex justify-center items-center w-full py-2 mt-10 text-white bg-gradient-to-r from-[#A456F7] to-[#3D81F6] text-sm rounded-md cursor-pointer'
+      <button
+        onClick={() => setIsMenuOpen(false)}
+        className='flex justify-center items-center w-full py-2 mt-4 animate-pulse font-semibold text-[#FFFFFF] bg-[#16a883] dark:bg-[#27E0B3] text-sm rounded-md cursor-pointer shadow-md hover:opacity-90'
       >
         <span className='mr-2 text-xl'>+</span> New Chat
       </button>
 
-      {/* search conversation */}
-      <div className='flex items-center gap-2 p-3 mt-4 border border-gray-400 dark:border-white/20 rounded-md'>
-        <img src={assets.search_icon} className='w-4 dark:invert' alt=""/>
-        <input onChange={(e) => setSearch(e.target.value)} value={search} type="text" placeholder='Search conversations' className='text-xs placeholder:text-gray-400 outline-none'/>
-        
-      </div>
-
-      {/* Recent chats
-      {chats.length > 0 && <p className='mt-4 text-sm'>Recent chats</p>}
-      <div className='flex-1 overflow-y-scroll mt-3 text-sm space-y-3'>
-        {
-          chats.filter((chat)=> chat.messages[0]?  chat.messages[0]?.content.toLowerCase().includes(search.toLowerCase()) : chat.name.toLowerCase().includes(search.toLowerCase())).map((chat)=>(
-            <div onClick={()=> {navigate('/'); setSelectedChat(chat); setIsMenuOpen(false)}} 
-            key={chat._id} className='p-2 px-4 dark:bg-[#57317C]/10 border border-gray-300 dark:border-[#80609F]/15 rounded-md cursor-pointer flex justify-between group'>
-              <div>
-                <p className='truncate w-full'>
-                  {chat.messages.length > 0 ? chat.messages[0].content.slice(0, 32) : chat.name}
-
-                </p>
-                <p className='text-xs text-gray-500 dark:text-[#B1A6C0]'>{moment(chat.updatedAt).fromNow()}</p>
-              </div>
-              <img src={assets.bin_icon} className='hidden group-hover:block w-4 cursor-pointer not-dark:invert' alt=""/>
-
-            </div>
-
-
-          ))
-        }
-      </div> */}
+      <div className='grow'></div>
 
       {/* Dark Mode Toggle */}
-        <div className='flex items-center justify-between gap-2 p-3 mt-90 border border-gray-300 dark:border-white/15 rounded-md'> 
+      <div className='flex items-center justify-between gap-2 p-3 mb-4 border border-gray-300 dark:border-white/15 rounded-md'>
         <div className='flex items-center gap-2 text-sm'>
-          <img src={assets.theme_icon} className='w-4 dark:invert' alt=""/>
+          <img src={assets.theme_icon} className='w-4 dark:invert' alt='theme' />
           <p>Dark Mode</p>
         </div>
 
         <label className='relative inline-flex cursor-pointer'>
-          <input onChange={()=> setTheme(theme === 'dark' ? 'light' : 'dark')} type="checkbox" className='sr-only peer' checked={theme === 'dark'} />
-          <div className='w-9 h-5 bg-gray-400 rounded-full peer-checked:bg-purple-600 transition-all'>
-
-          </div>
+          <input 
+            onChange={() => setTheme(theme === 'dark' ? 'light' : 'dark')} 
+            type='checkbox' 
+            className='sr-only peer' 
+            checked={theme === 'dark'} 
+          />
+          <div className='w-9 h-5 bg-gray-400 rounded-full peer-checked:bg-purple-600 transition-all'></div>
           <span className='absolute left-1 top-1 w-3 h-3 bg-white rounded-full transition-transform peer-checked:translate-x-4'></span>
         </label>
       </div>
 
-      <img onClick={() => setIsMenuOpen(false)} src={assets.close_icon} className='absolute top-3 right-3 h-5 cursor-pointer md:hidden not-dark:invert ' alt=""/>
+      <div className="text-center text-xs mb-3 opacity-70 dark:opacity-60">
+        PaperMind • {APP_VERSION}
+      </div>
 
+      {/* Logout Button */}
+      <button
+        onClick={logout}
+        className='flex items-center justify-center gap-2 py-2 text-white bg-slate-500 rounded-md hover:bg-white hover:text-black transition-colors'
+      >
+        <img src={assets.logout_icon} alt='logout' className='w-4 h-4 invert dark:invert-0' />
+        Logout
+      </button>
     </div>
   )
 }
